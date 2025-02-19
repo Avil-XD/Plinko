@@ -1,0 +1,245 @@
+:root {
+  --primary: #4CAF50;
+  --secondary: #2196F3;
+  --background: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --contrast: #FF5722;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#simulation-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+canvas {
+  max-width: 100%;
+  height: auto !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.controls {
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.08);
+  border-radius: 12px;
+  margin: 0.5rem 0;
+  width: 100%;
+  max-width: 800px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.stats p {
+  background: rgba(0,0,0,0.3);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 0;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.2s ease;
+}
+
+.stats p:hover {
+  transform: translateY(-2px);
+}
+
+.score, .high-score {
+  font-weight: 600;
+  color: var(--contrast);
+}
+
+.settings {
+  background: rgba(0,0,0,0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 20px;
+  transition: 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.slider::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: 0.3s ease;
+}
+
+.toggle input:checked + .slider::before {
+  background: var(--contrast);
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.speed-control input {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  outline: none;
+}
+
+.speed-control input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.speed-control input::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+#instructions {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background: var(--contrast);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 0.5rem;
+  }
+  
+  .controls {
+    padding: 1rem;
+  }
+  
+  .stats {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  
+  button {
+    flex: 1 1 auto;
+    min-width: 140px;
+    font-size: 0.9rem;
+  }
+  
+  canvas {
+    border-radius: 4px;
+  }
+}
+
+@keyframes particle-fall {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.particle {
+  animation: particle-fall 0.3s ease-out;
+}

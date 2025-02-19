@@ -1,0 +1,36 @@
+{
+  "name": "plinko-pro",
+  "version": "1.0.0",
+  "description": "A modern, interactive implementation of the classic Plinko game using Matter.js physics engine and p5.js",
+  "main": "js/sketch.js",
+  "scripts": {
+    "start": "npx http-server",
+    "lint": "eslint js/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/plinko-pro.git"
+  },
+  "keywords": [
+    "plinko",
+    "game",
+    "matter.js",
+    "p5.js",
+    "html5-game",
+    "physics"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/plinko-pro/issues"
+  },
+  "homepage": "https://github.com/yourusername/plinko-pro#readme",
+  "dependencies": {
+    "matter-js": "^0.14.2",
+    "p5": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "http-server": "^14.0.0"
+  }
+}
