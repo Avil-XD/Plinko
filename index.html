@@ -1,64 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Plinko Pro</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
-    <meta name="theme-color" content="#1a1a1a">
-    
-    <!-- Game Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.2/matter.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.min.js"></script>
-    
-    <!-- Game Scripts -->
-    <script src="js/p5.play.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/powerups.js"></script>
-    <script src="js/achievements.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/ground.js"></script>
-    <script src="js/particle.js"></script>
-    <script src="js/plinko.js"></script>
-    <script src="js/divisions.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/sketch.js"></script>
-    </head>
-    <body>
-      <main>
-        <div id="simulation-container"></div>
-        <div class="controls">
-          <div class="stats">
-            <p class="score">Score: <span id="current-score">0</span></p>
-            <p class="high-score">Best: <span id="high-score">0</span></p>
-            <p>Particles: <span id="particle-count">0</span></p>
-            <p>FPS: <span id="fps">0</span></p>
-          </div>
-          <div class="settings">
-            <label class="toggle">
-              <input type="checkbox" id="sound-toggle" checked>
-              <span class="slider">Sound</span>
-            </label>
-            <label class="toggle">
-              <input type="checkbox" id="glow-toggle" checked>
-              <span class="slider">Glow</span>
-            </label>
-            <div class="speed-control">
-              <label for="game-speed">Speed:</label>
-              <input type="range" id="game-speed" min="0.5" max="2" step="0.1" value="1">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plinko - An engaging arcade game with physics-based gameplay">
+    <title>Plinko Arcade</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js" defer></script>
+</head>
+<body>
+    <div class="game-wrapper">
+        <header class="game-header">
+            <h1>Plinko Arcade</h1>
+            <div class="settings-panel">
+                <button id="rulesBtn" class="icon-btn" aria-label="Game Rules" title="Game Rules">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12" y2="17"></line>
+                    </svg>
+                </button>
+                <button id="muteBtn" class="icon-btn" aria-label="Toggle Sound" title="Toggle Sound">🔊</button>
             </div>
-          </div>
-          <div class="button-group">
-            <button id="reset-btn" aria-label="Reset simulation">Reset</button>
-            <button id="color-btn" aria-label="Change particle color">Change Color</button>
-            <button id="auto-btn" aria-label="Toggle auto-drop">Auto Drop</button>
-          </div>
+        </header>
+
+        <main class="game-container">
+            <section class="score-panel">
+                <div class="score-board">
+                    <div class="score-item primary">
+                        <span class="label">Score</span>
+                        <span id="score" class="value glow-text">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">High Score</span>
+                        <span id="highscore" class="value">0</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">Balls Left</span>
+                        <span id="ballCount" class="value">5</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="label">Combo</span>
+                        <span id="combo" class="value">x1</span>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="difficulty-selector">
+                        <label for="difficulty" class="visually-hidden">Select Difficulty</label>
+                        <select id="difficulty" class="control-select" aria-label="Game Difficulty">
+                            <option value="1">Easy Mode</option>
+                            <option value="1.5">Medium Mode</option>
+                            <option value="2">Hard Mode</option>
+                        </select>
+                    </div>
+                    <button id="dropBtn" class="primary-btn pulse" aria-label="Drop Ball">
+                        Drop Ball
+                    </button>
+                    <button id="restartBtn" class="secondary-btn" aria-label="Restart Game">
+                        Restart
+                    </button>
+                </div>
+            </section>
+
+            <section class="game-board" aria-label="Game Board">
+                <div id="gameCanvas" role="application" aria-label="Plinko Game Canvas"></div>
+            </section>
+        </main>
+
+        <div id="rules" class="modal hidden" role="dialog" aria-labelledby="rulesTitle">
+            <div class="modal-content">
+                <h2 id="rulesTitle">How to Play</h2>
+                <ul class="rules-list">
+                    <li>Drop balls from the top and watch them bounce</li>
+                    <li>Score points based on where balls land</li>
+                    <li>Build combos for bonus points</li>
+                    <li>Higher difficulties give better multipliers</li>
+                </ul>
+                <div class="multiplier-info">
+                    <h3>Scoring Zones</h3>
+                    <div class="multiplier-grid">
+                        <span>2x</span>
+                        <span>3x</span>
+                        <span>5x</span>
+                        <span>10x</span>
+                        <span>5x</span>
+                        <span>3x</span>
+                        <span>2x</span>
+                    </div>
+                </div>
+                <button class="close-btn" aria-label="Close Rules">Got it!</button>
+            </div>
         </div>
-        <div id="instructions">
-          Click anywhere on the board to drop a particle!
+
+        <div id="gameOver" class="modal hidden" role="dialog" aria-labelledby="gameOverTitle">
+            <div class="modal-content result-screen">
+                <h2 id="gameOverTitle">Game Over!</h2>
+                <div class="final-scores">
+                    <p>Final Score: <span id="finalScore" class="highlight">0</span></p>
+                    <p>High Score: <span id="finalHighScore" class="highlight">0</span></p>
+                </div>
+                <button id="playAgainBtn" class="primary-btn" aria-label="Play Again">
+                    Play Again
+                </button>
+            </div>
         </div>
-      </main>
-    </body>
-  </html>
+    </div>
+
+    <script src="app.js" defer></script>
+</body>
+</html>
